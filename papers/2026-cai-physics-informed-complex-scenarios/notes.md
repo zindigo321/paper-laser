@@ -32,36 +32,36 @@ flowchart TD
 
 **每场景拟合。**
 
-$$
+```math
 x=f_\theta(z),\qquad
 \theta^*=\arg\min_\theta E(y,H(f_\theta(z))),\qquad x^*=f_{\theta^*}(z).
-$$
+```
 
-$y$ 为观测，$x$ 为场景响应，$z$ 为网络输入，$\theta$ 为针对当前观测优化的参数，$H$ 为物理前向算子；网络 architecture 自带隐式先验，而非仅靠训练样本。[PDF p.4, Eq.5](source.md#pdf-page-4)
+$y$ 为观测， $x$ 为场景响应， $z$ 为网络输入， $\theta$ 为针对当前观测优化的参数， $H$ 为物理前向算子；网络 architecture 自带隐式先验，而非仅靠训练样本。[PDF p.4, Eq.5](source.md#pdf-page-4)
 
 **multiple returns 的测量。**
 
 $$
-R=G*x+B,\quad y\sim\operatorname{Poisson}(R),\quad
+R=G*x+B,\quad y\sim\mathrm{Poisson}(R),\quad
 E(y,H(x))=\sum_{ijk}\left(R_{ijk}-y_{ijk}\log R_{ijk}\right).
 $$
 
-$G$ 为空间 PSF 与时间 pulse 的三维卷积核，$B$ 为背景，$R$ 为期望计数；原式可省略不依赖 $x$ 的常数。低通量近似忽略 pile-up。物理模型参数改变时可调整 $G$，但仍需对新观测优化网络。[PDF pp.4–5](source.md#pdf-page-4)
+$G$ 为空间 PSF 与时间 pulse 的三维卷积核， $B$ 为背景， $R$ 为期望计数；原式可省略不依赖 $x$ 的常数。低通量近似忽略 pile-up。物理模型参数改变时可调整 $G$，但仍需对新观测优化网络。[PDF pp.4–5](source.md#pdf-page-4)
 
 **沿路径透过率与表面表示。**
 
-$$
+```math
 T(t)=\exp\left[-\int_0^t\sigma(\tau)\,d\tau\right],\qquad
 R^0_{ijk}=\int_{k\Delta}^{(k+1)\Delta}\frac{T_{ij}(t)^2\sigma_{ij}(t)I_{ij}(t)}{(ct)^2}\,dt.
-$$
+```
 
-$\sigma$ 为光学密度，$I$ 为反射／辐射项，$\Delta$ 为 bin 宽；$T^2$ 表示往返衰减。原文时间／路径参数定义见 Eq.10–11，不能从该式直接移植到其他系统而忽略距离标定与模型单位。[PDF p.5](source.md#pdf-page-5)
+$\sigma$ 为光学密度， $I$ 为反射／辐射项， $\Delta$ 为 bin 宽； $T^2$ 表示往返衰减。原文时间／路径参数定义见 Eq.10–11，不能从该式直接移植到其他系统而忽略距离标定与模型单位。[PDF p.5](source.md#pdf-page-5)
 
 用 SDF $\phi$ 的零等值面表达表面，转为表面密度与 opacity $\alpha^s=1-e^{-\sigma^s}$；沿深度透过率为
 
-$$
-T^s_{ijk}=\prod_{l<k}(1-\alpha^s_{ijl}).
-$$
+```math
+T^s_{ijk}=\prod_{l\lt k}(1-\alpha^s_{ijl}).
+```
 
 将表面贡献卷积回 $G$ 后与光子观测比较；沿视线多层输出保留体素，不强制压成一个深度。[PDF pp.5–7, Eqs.12–20](source.md#pdf-page-5)
 
@@ -77,10 +77,10 @@ $$
 **显式 TV 与输出。**
 
 $$
-\mathcal L_{\rm total}=E(y,H(x))+10^{-6}\operatorname{TV}(\Lambda)+10^{-6}\operatorname{TV}(D).
+\mathcal L_{\rm total}=E(y,H(x))+10^{-6}\mathrm{TV}(\Lambda)+10^{-6}\mathrm{TV}(D).
 $$
 
-$\Lambda$、$D$ 分别为强度和深度；深度通过时间轴 Softmax 加权估计，强度取时间轴最大响应。多层任务使用 $\alpha^sI^s$ 体素表达。[PDF p.7](source.md#pdf-page-7)
+$\Lambda$、 $D$ 分别为强度和深度；深度通过时间轴 Softmax 加权估计，强度取时间轴最大响应。多层任务使用 $\alpha^sI^s$ 体素表达。[PDF p.7](source.md#pdf-page-7)
 
 ## 网络配置、训练与关键参数
 
@@ -94,8 +94,8 @@ $\Lambda$、$D$ 分别为强度和深度；深度通过时间轴 Softmax 加权�
 | 仿真光子条件 | 信号:背景包括 10:2 到 1:100；较低三组 3:100、2:100、1:100 不在被比较监督模型原训练条件中 | [pp.8–9](source.md#pdf-page-8) |
 | 本文室内系统 | NTK-PILAS 皮秒激光，5 mW；SPCM-AQRH4 单 SPAD，dead time 22 ns；ID900 TCSPC，100 ps；滤光带宽 10 nm，振镜扫描 | [p.11](source.md#pdf-page-11) |
 | 室内规模与 SBR | $128\times128\times256$ 观测体；两场景、SBR 0.133／0.022；扫描网格不是探测器阵列 | [pp.11–13](source.md#pdf-page-11) |
-| 多深度测量 | 磨砂玻璃遮挡 SCU，$128\times128$；0.1 ms/pixel；平均 PPP 4.2，SBR 0.53 | [pp.13–14](source.md#pdf-page-13) |
-| 雾测量 | 室内雾箱，676 nm、5 mW，$128\times128$ 扫描，100 ps TCSPC；本文未给足以对应外场气象能见度的定量参数 | [p.14](source.md#pdf-page-14) |
+| 多深度测量 | 磨砂玻璃遮挡 SCU， $128\times128$；0.1 ms/pixel；平均 PPP 4.2，SBR 0.53 | [pp.13–14](source.md#pdf-page-13) |
+| 雾测量 | 室内雾箱，676 nm、5 mW， $128\times128$ 扫描，100 ps TCSPC；本文未给足以对应外场气象能见度的定量参数 | [p.14](source.md#pdf-page-14) |
 | 动态速度／重建 fps | 主要为静态场景，无实际 UAV 高速连续跟踪或在线 fps 验证 | [pp.11–15](source.md#pdf-page-11) |
 
 原文称无监督、不需标签；雾实验仍使用模拟预训练初始化，不能把“不需标注数据”扩展为“从未使用任何模拟数据”。[PDF p.7](source.md#pdf-page-7)
@@ -129,8 +129,8 @@ $\Lambda$、$D$ 分别为强度和深度；深度通过时间轴 Softmax 加权�
 
 | 场景 | 距离与扫描网格 | PPP／SBR | 获取与分析说明 |
 |---|---|---|---|
-| K11 Building | 21.6 km，$256\times256$ | 1.20／0.11 | 22 ms/pixel，激光 100 mW；35 μrad divergence，22.3 μrad receiving FoV |
-| Pudong Civil Aviation Building | 45 km，$128\times128$ | 约 2.59／0.03 | 激光 120 mW；本文未给该场景每像素 dwell；同轴系统 |
+| K11 Building | 21.6 km， $256\times256$ | 1.20／0.11 | 22 ms/pixel，激光 100 mW；35 μrad divergence，22.3 μrad receiving FoV |
+| Pudong Civil Aviation Building | 45 km， $128\times128$ | 约 2.59／0.03 | 激光 120 mW；本文未给该场景每像素 dwell；同轴系统 |
 
 来源：[PDF pp.11,13](source.md#pdf-page-11)。长距离比较主要为定性：PIDNN 与 Li 等传统方法总体相近，部分细节更好；没有提供完整 metric truth 下的长距离量化精度表。不能把室内 Table III 的误差移作 45 km 测距误差。
 

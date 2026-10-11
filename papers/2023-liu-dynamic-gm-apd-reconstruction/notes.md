@@ -35,16 +35,16 @@
 
 原文式 (1)–(3) 给出同步复位 TDC 的检测概率：[PDF p.2](source.md#pdf-page-2)
 
-$$
+```math
 P_j=\exp\!\left(-\sum_{i=1}^{j-1}K_i\right)\left(1-e^{-K_j}\right),\qquad
 K_j=\int_{(j-1)t_{\rm bin}}^{jt_{\rm bin}}R(t)\,dt,
-$$
+```
 
-$$
+```math
 R(t)=r\,s(t-2d/c)+b.
-$$
+```
 
-$P_j$ 为第 $j$ 个时间 bin 首次触发的概率；$K_j$ 为该 bin 的积分光子量；$t_{\rm bin}$ 为 bin 宽度；$r,d,b$ 分别表示反射率、距离和背景光子率；$s$ 为脉冲波形，$c$ 为光速。运动使像素对应的 $r,d,b$ 随采样帧变化，直接累积不再对应固定场景。
+$P_j$ 为第 $j$ 个时间 bin 首次触发的概率； $K_j$ 为该 bin 的积分光子量； $t_{\rm bin}$ 为 bin 宽度； $r,d,b$ 分别表示反射率、距离和背景光子率； $s$ 为脉冲波形， $c$ 为光速。运动使像素对应的 $r,d,b$ 随采样帧变化，直接累积不再对应固定场景。
 
 ### 2. 分阶段运动估计和数据分离
 
@@ -54,7 +54,7 @@ $$
 \rho=l\cos\theta+\mathrm{bin}(l)\sin\theta.
 $$
 
-参数空间中的峰值给出目标轨迹。再依据预测回波 $\mathrm{bin}_{\rm tgt}(l)$ 及门宽 $\mathrm{bin}_{\Delta}$ 选择目标候选光子。对这些候选数据的行、列坐标分别重复 Hough 变换，得到 $\theta_m,\theta_n$；未归属目标的数据进入背景集合。[PDF pp.3–4，式 (7)–(14)](source.md#pdf-page-3)
+参数空间中的峰值给出目标轨迹。再依据预测回波 $`\mathrm{bin}_{\rm tgt}(l)`$ 及门宽 $`\mathrm{bin}_{\Delta}`$ 选择目标候选光子。对这些候选数据的行、列坐标分别重复 Hough 变换，得到 $\theta_m,\theta_n$；未归属目标的数据进入背景集合。[PDF pp.3–4，式 (7)–(14)](source.md#pdf-page-3)
 
 ### 3. 对齐到采集窗口末帧
 

@@ -34,10 +34,10 @@ flowchart TD
 **测量模型。** 以物理时间记号整理为
 
 $$
-s_{ij,t}\sim\operatorname{Poisson}\left(\alpha_{ij}h(t-2d_{ij}/c)+b_{ij}\right).
+s_{ij,t}\sim\mathrm{Poisson}\left(\alpha_{ij}h(t-2d_{ij}/c)+b_{ij}\right).
 $$
 
-$s$ 为计数，$\alpha$ 为反射／回波幅度，$h$ 为 IRF，$d$ 为距离，$b$ 为时间均匀背景和暗计数；离散实现需以 bin 宽换算时间，并满足重复周期大于最大往返延时。[PDF p.3, Eq.1](source.md#pdf-page-3)
+$s$ 为计数， $\alpha$ 为反射／回波幅度， $h$ 为 IRF， $d$ 为距离， $b$ 为时间均匀背景和暗计数；离散实现需以 bin 宽换算时间，并满足重复周期大于最大往返延时。[PDF p.3, Eq.1](source.md#pdf-page-3)
 
 **AITV 先验。** 注意这里是两种 TV 的**差**，而不是简单相加：
 
@@ -50,23 +50,23 @@ $$
 \min_u L(u)+\lambda J(u).
 $$
 
-$u$ 是粗深度图，$D_x,D_y$ 为差分，$\lambda$ 为数据项／正则权重，$\tau$ 为两类 TV 的权衡；$L$ 为 Poisson 数据项。原文引入辅助变量并用 ADMM 分解，$u$ 更新走 Fourier 域、数据项更新采用 Newton、梯度项采用 shrinkage，再更新对偶与 penalty；这是预处理先验求解流程。[PDF pp.3–4, Eqs.2–18, Algorithm 1](source.md#pdf-page-3)
+$u$ 是粗深度图， $D_x,D_y$ 为差分， $\lambda$ 为数据项／正则权重， $\tau$ 为两类 TV 的权衡； $L$ 为 Poisson 数据项。原文引入辅助变量并用 ADMM 分解， $u$ 更新走 Fourier 域、数据项更新采用 Newton、梯度项采用 shrinkage，再更新对偶与 penalty；这是预处理先验求解流程。[PDF pp.3–4, Eqs.2–18, Algorithm 1](source.md#pdf-page-3)
 
 原文对线性算子 $A$ 与实际时间平移测量模型的对应、背景项在不同目标式中的保留方式没有完全展开；Eq.16 写的是 practical shrinkage update。复现时需核对实际求解器，不能仅据笔记声称非凸目标已被精确求解。[PDF p.4](source.md#pdf-page-4)
 
 **双分支与融合。** AITV 输出二维深度再上投影至三维；时间窗宽接近脉冲 FWHM，汇聚回波附近的计数。CAM 提取多尺度特征与注意力；CACEM 用一分支查询另一分支：
 
 $$
-\operatorname{Attention}(Q,K,V)=\operatorname{softmax}\left(\frac{QK^\top}{\sqrt{d_e}}\right)V.
+\mathrm{Attention}(Q,K,V)=\mathrm{softmax}\left(\frac{QK^\top}{\sqrt{d_e}}\right)V.
 $$
 
-$Q,K,V$ 为窗口内嵌入，$d_e$ 为 embedding 维度；再以 ECA 全局通道权重补充，形成残差融合。[PDF pp.3,5](source.md#pdf-page-3)
+$Q,K,V$ 为窗口内嵌入， $d_e$ 为 embedding 维度；再以 ECA 全局通道权重补充，形成残差融合。[PDF pp.3,5](source.md#pdf-page-3)
 
 **SWNet 与训练目标。** 两套串联 encoder–decoder 组成 W 形路径；各尺度分别处理 CNN 局部细节与 shifted-window Swin 全局信息。预测归一化时间概率 $\hat h$，以 SoftArgmax 估计 bin，再转换距离：
 
 $$
 S(\hat h_{ij})=\sum_n n\hat h_{ij}[n],\qquad
-\mathcal L=\sum_{ij}D_{\rm KL}(h_{ij}\Vert\hat h_{ij})+10^{-5}\operatorname{TV}(S(\hat h)).
+\mathcal L=\sum_{ij}D_{\rm KL}(h_{ij}\Vert\hat h_{ij})+10^{-5}\mathrm{TV}(S(\hat h)).
 $$
 
 $h$ 为真实归一化直方图；这里训练 loss 的 TV 与预处理 AITV 是不同位置的约束，两个 $\lambda$ 不应混用。[PDF pp.6–7](source.md#pdf-page-6)
@@ -75,9 +75,9 @@ $h$ 为真实归一化直方图；这里训练 loss 的 TV 与预处理 AITV 是
 
 | 证据类型 | 探测器／空间规模 | 时间与光子条件 | 距离、速度与可验证范围 |
 |---|---|---|---|
-| 模拟训练／测试 | NYUv2 训练、Middlebury 测试；$64\times64$ 数据、$32\times32$ crop，不等于硬件阵列 | 1024 bins，80 ps/bin，400 ps FWHM；九组混合信号:背景计数训练，18 组测试 | 无独立公里级外场或 UAV 速度验证；80 ps 换算约 12 mm 距离 bin，不能当作误差 |
-| Lindell 公开实测 | LinoSPAD 一维阵列配合扫描，$256\times256\times1536$ 重建体；PointGrey 相机仅作结构参照 | 450 nm 激光；26 ps/bin；原采集系统扫描率 20 或 5 Hz | 本文五场景定性评价，无完整逐像素 metric depth 真值，不报告其量化 RMSE |
-| 本文实验室 TCSPC | 单 SPAD 模块配双轴扫描，$128\times128$ 扫描网格；不是 $128\times128$ 硬件阵列 | 830 nm，10 MHz，激光 FWHM 70 ps；PicoHarp 300，4 ps/bin；实测 IRF FWHM≈340 ps | 室内平面、锥柱、球、石膏头像；绝对距离、目标速度、每点驻留／总采集时间原文未提供 |
+| 模拟训练／测试 | NYUv2 训练、Middlebury 测试； $64\times64$ 数据、 $32\times32$ crop，不等于硬件阵列 | 1024 bins，80 ps/bin，400 ps FWHM；九组混合信号:背景计数训练，18 组测试 | 无独立公里级外场或 UAV 速度验证；80 ps 换算约 12 mm 距离 bin，不能当作误差 |
+| Lindell 公开实测 | LinoSPAD 一维阵列配合扫描， $256\times256\times1536$ 重建体；PointGrey 相机仅作结构参照 | 450 nm 激光；26 ps/bin；原采集系统扫描率 20 或 5 Hz | 本文五场景定性评价，无完整逐像素 metric depth 真值，不报告其量化 RMSE |
+| 本文实验室 TCSPC | 单 SPAD 模块配双轴扫描， $128\times128$ 扫描网格；不是 $128\times128$ 硬件阵列 | 830 nm，10 MHz，激光 FWHM 70 ps；PicoHarp 300，4 ps/bin；实测 IRF FWHM≈340 ps | 室内平面、锥柱、球、石膏头像；绝对距离、目标速度、每点驻留／总采集时间原文未提供 |
 
 来源：[PDF pp.6–11](source.md#pdf-page-6)。实验室条件 PPP=3、SBR≈2 与 PPP=11、SBR≈0.5；PPP 是**平均检测光子数**，不是平均信号光子数。第二组检测光子更多但背景也更强，不能只按 PPP 判定条件更好。[PDF pp.10–12](source.md#pdf-page-10)
 
