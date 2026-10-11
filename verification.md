@@ -29,10 +29,16 @@
 
 ## GitHub 状态
 
-- 目标：[zindigo321/paper-laser](https://github.com/zindigo321/paper-laser)，`main`，保持公开。
-- 已核对远端 main 仍是原始提交 `12559b2945883785a203b3472ecae03f9233cfdb`。公开版直接在原始历史上新增，保留原 README 标题与简介；含全部 PDF 的私人本地整理提交不进入公开历史。
-- 当前连接创建 PDF blob 和 Markdown 文件均返回 HTTP 403 `Resource not accessible by integration`；GitHub App 安装列表为空。当前连接没有成功写入本仓库。
-- 写入尝试后重新读取远端 main，仍为原始提交；远端新增文件数为 0。远端上传／推送和在线渲染验证尚未执行，待连接具备仓库写入授权后继续。
+用户于 2026-10-11 通过 GitHub Desktop 完成提交与推送；以下核对针对首次上传提交，后续状态文档修订不改变该次文件验证结果。
+
+- 仓库：[zindigo321/paper-laser](https://github.com/zindigo321/paper-laser)，`main`，保持公开。
+- 首次上传提交：[d4b6e9bab84e63e47a58c4eb26972160d1781fb4](https://github.com/zindigo321/paper-laser/commit/d4b6e9bab84e63e47a58c4eb26972160d1781fb4)，说明为 `docs: add LiDAR paper knowledge base`。
+- 已读取 GitHub 远端提交和完整递归文件树，未截断；共 31 个文件，包括 7 篇 notes、7 份单篇 BibTeX、4 份 PDF 和 3 份 source 说明。
+- 上传提交的唯一父提交为原始提交 `12559b2945883785a203b3472ecae03f9233cfdb`，原仓库历史保留。含未获公开许可 PDF 的私人本地整理提交不在公开分支历史内。
+- 远端 Git 树为 `6deb68ec53ee71c4d33a658404a589606f8bf192`，与已检查的本地公开版 Git 树完全一致；逐个核对 31 个文件的 Git blob SHA 和文件模式均匹配。4 份 PDF 的 SHA-256 已在本地与原上传文件核对，远端 blob 匹配证明上传文件与该版本字节一致。
+- 远端全部内部文件链接的目标均存在；306 个内部链接、211 个 PDF 页码引用／来源定位及公式、表格、Mermaid 的静态结构检查通过。
+- GitHub 数学公式、Mermaid 与 PDF 的实际网页视觉预览未由自动流程确认：检索服务无法打开仓库网页；内部路径、文件内容和语法已通过 GitHub 读取接口及本地检查核对。出版商 DOI／全文页面的访问限制另见上文。
+- 本次上传由用户在 GitHub Desktop 完成。先前自动写入接口返回 HTTP 403 `Resource not accessible by integration`，不影响本次已完成的用户推送；当前连接用于远端只读验证。
 
 ## 文件清单
 

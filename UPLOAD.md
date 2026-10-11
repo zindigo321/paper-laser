@@ -2,6 +2,10 @@
 
 目标：[zindigo321/paper-laser](https://github.com/zindigo321/paper-laser)，分支 `main`。用户已明确选择 Public，无需更改仓库可见性。
 
+## 已完成的上传
+
+用户已于 2026-10-11 使用 GitHub Desktop 推送首次上传提交 `d4b6e9bab84e63e47a58c4eb26972160d1781fb4`。远端 31 个文件与已验证的公开版一致，包含 7 篇笔记和 4 份原始 PDF；原始提交历史已保留。详细验证证据及网页预览限制见 [verification.md](verification.md)。下列步骤保留为后续维护参考。
+
 ## 文件范围
 
 公开版包含 7 篇阅读笔记、7 份单篇 BibTeX、总览、对比及 4 篇许可允许的原始 PDF。另 3 篇只有来源说明，原因见 [PDF_LICENSES.md](PDF_LICENSES.md)。使用公开版压缩包 `paper-laser-public.zip`；旧的 `paper-laser-knowledge-base.zip` 含未获公开许可的全文，不应用于本公开仓库。
@@ -33,4 +37,4 @@ git push origin main
 
 ## GitHub 连接授权
 
-当前连接的 PDF 和 Markdown 上传接口均返回 HTTP 403 `Resource not accessible by integration`；可读取仓库不能证明具备写入权限。需要给当前 GitHub 连接配置访问本仓库的写入授权，或使用自己已经登录的 GitHub Desktop 完成上述上传。无需发送访问令牌。最新远端状态见 [verification.md](verification.md)。
+当前连接的 PDF 和 Markdown 上传接口均返回 HTTP 403 `Resource not accessible by integration`；可读取仓库不能证明具备写入权限。用户已使用自己登录的 GitHub Desktop 完成上传。若今后需要助手直接修改远端，仍须为当前连接配置本仓库的写入授权；也可继续使用 GitHub Desktop 维护。无需发送访问令牌。最新远端状态见 [verification.md](verification.md)。
