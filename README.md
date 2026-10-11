@@ -1,6 +1,6 @@
 # paper-laser
 
-some paper for laser detection
+some papers for laser detection
 
 单光子 LiDAR 文献知识库：整理中文阅读笔记、可引用书目信息与实验条件对比。英文原题、方法名和专业术语按原文保留。本次阅读依据 **7 篇用户实际上传的正式发表全文**；公开仓库收录 **4 篇许可允许的原始 PDF**，另 3 篇保留来源、阅读笔记和引用，没有以摘要页或下载列表代替全文。
 
