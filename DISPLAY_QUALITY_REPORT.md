@@ -4,7 +4,9 @@
 
 已完成原有 15 个 Markdown 文件的源码检查和 GitHub **Preview 阅读页面**检查，并修复 7 篇笔记中确认的公式显示问题。修复后的 178 个数学表达式已通过本地解析和逐项静态预览；仓库校验脚本通过，4 份原始 PDF 字节未变。
 
-**修复后的 GitHub 网页显示未验证。** 创建远端分支的 GitHub 连接器返回 `403 Resource not accessible by integration`；普通 Git 推送预检查因缺少认证失败。未执行实际推送，未创建远端修复分支或 PR。本地提交和可应用补丁随交付结果提供。
+**GitHub 修复后复查已部分完成。** 用户通过 GitHub Desktop 发布了修复分支，远端提交为 `85d2617bf20afaad5457431dbed0fa99b667b5cd`；其父提交是原基线，文件树与已验证的初次补丁完全一致。Liu、Feng 的全部 38 个公式已实际渲染；Cai 的 35 个公式中 34 个渲染，表面透过率连乘式仍报括号错误。
+
+本次补充修复仅把 Cai L62 连乘条件中的字面小于号改为等价的 `\lt` 命令。两个写法严格解析后生成相同的数学 MathML；变量、上下标、运算关系及公式出处不变。**这一行补充修复尚待用户提交、推送及 GitHub 实测。** 其余四篇修改笔记和本报告在当前浏览器返回 GitHub 临时错误页，网页复查未完成；窄屏和 PDF 网页预览／页码跳转仍未验证。未创建 PR、未合并。
 
 ## 检查基线与范围
 
@@ -34,27 +36,46 @@ GitHub 页面访问记录中的 `main` 在检查时对应上述基线提交。�
 | [papers/2026-qiao-multi-temporal-3d-imaging/notes.md](papers/2026-qiao-multi-temporal-3d-imaging/notes.md) | [Preview](https://github.com/zindigo321/paper-laser/blob/main/papers/2026-qiao-multi-temporal-3d-imaging/notes.md) | 已修复公式格式；保留 ToF 换算为“整理者的单位说明” |
 | [papers/2026-shen-physics-enhanced-imaging/notes.md](papers/2026-shen-physics-enhanced-imaging/notes.md) | [Preview](https://github.com/zindigo321/paper-laser/blob/main/papers/2026-shen-physics-enhanced-imaging/notes.md) | 已修复公式格式；原 PDF 不在仓库，本次未取得 |
 
+## GitHub Desktop 发布后的网页复查
+
+复查对象：`fix/markdown-display-quality-20261011` 的 `85d2617bf20afaad5457431dbed0fa99b667b5cd`；桌面视口 1363×936。检查实际 Preview 中的 MathML、错误框、表格单元格和 Mermaid SVG，等待公式组件完成加载后判定。初始加载时的 LaTeX 占位文字未被误判为渲染失败。
+
+| 修改页面 | 本轮实际结果 | 状态 |
+|---|---|---|
+| `papers/2023-liu-dynamic-gm-apd-reconstruction/notes.md` | 全部 19 个公式生成 MathML，无公式错误或正文裸露命令；3 表列数一致；Mermaid 9 节点／9 连线 | 已修复并验证（GitHub 桌面） |
+| `papers/2026-feng-four-dimensional-attention/notes.md` | 全部 19 个公式生成 MathML；概率、CE、NLTV 和 MSE 权重截图复查；2 表列数一致；Mermaid 5／4 | 已修复并验证（GitHub 桌面） |
+| `papers/2026-cai-physics-informed-complex-scenarios/notes.md` | 35 个公式中 34 个生成 MathML；L62 仍显示 `Extra open brace or missing close brace` 及公式源码；4 表列数一致；Mermaid 5／4；已制作小于号的补充修复 | L62 已修复待网页验证；其余已确认的问题通过桌面复查 |
+| `papers/2026-guo-instantaneous-uav-tracking/notes.md` | GitHub 返回 Unicorn 临时错误；重载一次仍不可用，从分支索引打开也显示 Error loading page | 已修复待网页验证 |
+| `papers/2026-guo-uav-motion-blur-super-resolution/notes.md` | 当前浏览器收到 GitHub Unicorn 临时错误页 | 已修复待网页验证 |
+| `papers/2026-qiao-multi-temporal-3d-imaging/notes.md` | 当前浏览器收到 GitHub Unicorn 临时错误页 | 已修复待网页验证 |
+| `papers/2026-shen-physics-enhanced-imaging/notes.md` | 当前浏览器收到 GitHub Unicorn 临时错误页 | 已修复待网页验证 |
+| `DISPLAY_QUALITY_REPORT.md` | 当前浏览器收到 GitHub Unicorn 临时错误页；本次更新的报告尚未发布 | 已修复待网页验证 |
+
+本轮实际读取 73 个数学组件，72 个成功、1 个明确报错；不能写成 178 个公式均已在修复后的 GitHub 通过。上述临时访问失败不作为内部链接失效或文件损坏的证据。初次基线检查及本地 178 项检查继续保留。
+
+用户 Windows 的 `python tools/verify_repository.py` 返回 `ok: true`、零错误；唯一警告是未安装 `pypdf`，该次 PDF 总页数按原始清单检查，全部 PDF SHA-256 已校验。检查环境在补充修复后再次实际运行脚本，包含 PDF 页数解析，零错误、零警告。单纯 LF／CRLF 工作区转换提示未作为乱码证据。
+
 ## 确认问题与修复清单
 
 下列行号均基于检查前提交；本次笔记修改未增删行，因此修复后对应行号不变。每组标题给出完整文件路径，表格中的每条问题均归属于该文件。“已修复待网页验证”表示源码已修复且本地检查通过，**不表示修复后的 GitHub 页面已经通过**。
 
-验证方式缩写：G＝修复前 GitHub Preview 的实际显示／渲染错误；L＝修复后 KaTeX 解析和逐项静态预览；D＝修复前后源码归一化比较；P＝可访问原 PDF 核对。
+验证方式缩写：G＝修复前 GitHub Preview 的实际显示／渲染错误；W＝发布后 GitHub 桌面 Preview 的实际 MathML／截图复查；L＝修复后 KaTeX 解析和逐项静态预览；D＝修复前后源码归一化比较；P＝可访问原 PDF 核对。W 不包含窄屏验证。
 
 ### papers/2023-liu-dynamic-gm-apd-reconstruction/notes.md
 
 | 位置／所在标题 | 问题现象 | 原因 | 修复方式 | 验证方式 | 状态 |
 |---|---|---|---|---|---|
-| L38–45，首次触发观测模型 | 指数函数旁出现额外感叹号，乘积与积分微分旁出现逗号 | 普通数学段先经 Markdown 处理，标点转义 `\!`、`\,` 被消耗 | 两个独立公式改用 `math` 围栏，完整保留公式源码 | G、L、D；P 未完成 | 已修复待网页验证 |
-| L47，变量定义 | 5 个行内表达式连同美元定界符作为普通文字显示 | 中文标点紧接行内公式开头，未被 GitHub 识别 | 开头补空格，保留原变量与定义 | G、L、D | 已修复待网页验证 |
-| L57，分阶段运动估计和数据分离 | 两个 bin 表达式下标被破坏并暴露源码 | 同一段中的下划线参与 Markdown 强调解析 | 两个行内公式使用 GitHub 支持的美元加反引号定界形式 | G、L、D；P 未完成 | 已修复待网页验证 |
+| L38–45，首次触发观测模型 | 指数函数旁出现额外感叹号，乘积与积分微分旁出现逗号 | 普通数学段先经 Markdown 处理，标点转义 `\!`、`\,` 被消耗 | 两个独立公式改用 `math` 围栏，完整保留公式源码 | G、W、L、D；P 未完成 | 已修复并验证（GitHub 桌面） |
+| L47，变量定义 | 5 个行内表达式连同美元定界符作为普通文字显示 | 中文标点紧接行内公式开头，未被 GitHub 识别 | 开头补空格，保留原变量与定义 | G、W、L、D | 已修复并验证（GitHub 桌面） |
+| L57，分阶段运动估计和数据分离 | 两个 bin 表达式下标被破坏并暴露源码 | 同一段中的下划线参与 Markdown 强调解析 | 两个行内公式使用 GitHub 支持的美元加反引号定界形式 | G、W、L、D；P 未完成 | 已修复并验证（GitHub 桌面） |
 
 ### papers/2026-feng-four-dimensional-attention/notes.md
 
 | 位置／所在标题 | 问题现象 | 原因 | 修复方式 | 验证方式 | 状态 |
 |---|---|---|---|---|---|
-| L42–46，时间分类与连续估计 | 求和项中时间 bin 与概率之间出现逗号 | `\,` 被 Markdown 当作标点转义处理 | 改用 `math` 围栏，保留概率、求和、距离换算各项 | G、L、D、P（PDF pp.5–6；整理符号说明保留） | 已修复待网页验证 |
-| L48、L62，变量定义 | 共 7 个行内变量或表达式暴露源码 | 中文标点与开头定界符相邻 | 补开头空格 | G、L、D | 已修复待网页验证 |
-| L57–60，训练目标 | NLTV 权重公式报宏不允许，且指数旁出现感叹号 | 当前 GitHub 渲染器拒绝 `\operatorname`；Markdown 消耗 `\!` | MSE 改用同名字的直立字体命令；整个公式改用 `math` 围栏 | G、L、D、P（PDF pp.11–12） | 已修复待网页验证 |
+| L42–46，时间分类与连续估计 | 求和项中时间 bin 与概率之间出现逗号 | `\,` 被 Markdown 当作标点转义处理 | 改用 `math` 围栏，保留概率、求和、距离换算各项 | G、W、L、D、P（PDF pp.5–6；整理符号说明保留） | 已修复并验证（GitHub 桌面） |
+| L48、L62，变量定义 | 共 7 个行内变量或表达式暴露源码 | 中文标点与开头定界符相邻 | 补开头空格 | G、W、L、D | 已修复并验证（GitHub 桌面） |
+| L57–60，训练目标 | NLTV 权重公式报宏不允许，且指数旁出现感叹号 | 当前 GitHub 渲染器拒绝 `\operatorname`；Markdown 消耗 `\!` | MSE 改用同名字的直立字体命令；整个公式改用 `math` 围栏 | G、W、L、D、P（PDF pp.11–12） | 已修复并验证（GitHub 桌面） |
 
 ### papers/2026-guo-instantaneous-uav-tracking/notes.md
 
@@ -91,11 +112,11 @@ GitHub 页面访问记录中的 `main` 在检查时对应上述基线提交。�
 
 | 位置／所在标题 | 问题现象 | 原因 | 修复方式 | 验证方式 | 状态 |
 |---|---|---|---|---|---|
-| L35–38，每场景拟合 | 星号上标被破坏，实际渲染报 `Missing open brace for superscript` | 多个星号参与 Markdown 强调解析 | 改用 `math` 围栏，保留优化变量和两个星号结果 | G、L、D；P 未完成 | 已修复待网页验证 |
-| L53–56，透过率与表面表示 | 积分变量前出现逗号 | `\,` 被 Markdown 消耗 | 改用 `math` 围栏，保留积分范围、平方和分母 | G、L、D；P 未完成 | 已修复待网页验证 |
-| L62–64，表面透过率 | 连乘下标实际渲染报 `Extra open brace or missing close brace` | 下标中的小于号序列受到 Markdown HTML 解析影响 | 改用 `math` 围栏，保留完整连乘关系 | G、L、D；P 未完成 | 已修复待网页验证 |
-| L45、80，测量模型／显式 TV | 2 个独立公式因 3 处函数宏被拒绝而报错 | 当前 GitHub 渲染器拒绝 `\operatorname` | Poisson 和两个 TV 改用同名字的直立字体命令 | G、L、D；P 未完成 | 已修复待网页验证 |
-| L40、49、58、83、97–98、132–133，定义／实验表格 | 共 14 个行内表达式暴露源码，含室内和长距离扫描维度 | 中文标点与开头定界符相邻 | 补开头空格，保留数据、单位和证据页码 | G、L、D | 已修复待网页验证 |
+| L35–38，每场景拟合 | 星号上标被破坏，实际渲染报 `Missing open brace for superscript` | 多个星号参与 Markdown 强调解析 | 改用 `math` 围栏，保留优化变量和两个星号结果 | G、W、L、D；P 未完成 | 已修复并验证（GitHub 桌面） |
+| L53–56，透过率与表面表示 | 积分变量前出现逗号 | `\,` 被 Markdown 消耗 | 改用 `math` 围栏，保留积分范围、平方和分母 | G、W、L、D；P 未完成 | 已修复并验证（GitHub 桌面） |
+| L62–64，表面透过率 | 发布后的连乘式仍报 `Extra open brace or missing close brace` 并暴露源码 | 字面 `l<k` 在 GitHub 触发解析异常；本地括号平衡且解析成功 | 保留 `math` 围栏，把 `<` 改成 `\lt`；完整保留连乘条件和所有项 | G、W 确认错误；L、D 通过；P 未完成；补充版本 W 待完成 | 已修复待网页验证 |
+| L45、80，测量模型／显式 TV | 2 个独立公式因 3 处函数宏被拒绝而报错 | 当前 GitHub 渲染器拒绝 `\operatorname` | Poisson 和两个 TV 改用同名字的直立字体命令 | G、W、L、D；P 未完成 | 已修复并验证（GitHub 桌面） |
+| L40、49、58、83、97–98、132–133，定义／实验表格 | 共 14 个行内表达式暴露源码，含室内和长距离扫描维度 | 中文标点与开头定界符相邻 | 补开头空格，保留数据、单位和证据页码 | G、W、L、D | 已修复并验证（GitHub 桌面） |
 
 ### tools/verify_repository.py
 
@@ -148,7 +169,7 @@ GitHub 页面访问记录中的 `main` 在检查时对应上述基线提交。�
 
 Liu、Shen、Cai 的原始 PDF 不在公开仓库，官方页面本次未提供可访问全文。其格式修复保留原有表达式，未推测新的公式内容；原文核对状态为 **待核实**。
 
-7 篇笔记修复前后比较：只归一化新增空格、数学围栏／保护定界形式和函数字体命令后，文本完全相同。原英文题名、作者姓名、数据、单位、DOI、引用、公式出处及“原文结论／整理者归纳／推断”的区别均保留。原有 BibTeX、清单、校验值、授权说明和历史验证文件未改动。论文中原已标注的数值或单位不一致未擅自修正。
+7 篇笔记修复前后比较：只归一化新增空格、数学围栏／保护定界形式、函数字体命令，以及 Cai 唯一一处 `<`／`\lt` 的等价写法后，文本完全相同。原英文题名、作者姓名、数据、单位、DOI、引用、公式出处及“原文结论／整理者归纳／推断”的区别均保留。原有 BibTeX、清单、校验值、授权说明和历史验证文件未改动。论文中原已标注的数值或单位不一致未擅自修正。
 
 ## 修复后复查与验证边界
 
@@ -160,11 +181,11 @@ Liu、Shen、Cai 的原始 PDF 不在公开仓库，官方页面本次未提供�
 | 本地可视复查 | 全部 178 项公式逐项静态渲染；7 篇笔记分别生成 1000 px 和 390 px 宽的离线静态预览 | 数学符号可见；窄版长公式／表格在打印引擎中可能溢出，不能据此宣称网页横向滚动已验证 |
 | 本地交互预览 | 提供包含原有 15 个文件的 HTML，可切换桌面与 390 px 内容宽度 | 已生成；本会话浏览器不允许打开本地文件，交互操作及本地 Mermaid JavaScript 渲染未验证 |
 | GitHub 修复前 | 实际打开全部 15 个 Preview 页面；检查公式错误、26 表格、7 Mermaid 及来源锚点 | 已确认上列问题；桌面视口 1363×936 |
-| GitHub 修复后 | 需要远端修复分支或 PR 页面 | **GitHub 网页显示未验证**；远端写入受阻，不能用静态检查代替 |
+| GitHub 修复后 | 用户已发布 `85d2617`；Liu／Feng 全部公式通过；Cai 34 项成功、1 项报错并补充修复；其余修改页面访问暂时失败 | **部分验证**；补充修复、其他四篇笔记及更新报告待网页验证 |
 | GitHub 窄屏 | 当前浏览器不提供视口调整，尝试浏览器缩放未改变视口尺寸 | **未验证** |
 | GitHub PDF 预览和页码跳转 | 打开 Qiao 的 PDF 阅读页，预览出现空白画布 | **未验证**；本地 PDF 和页码范围检查通过 |
 
-新增本报告后，最终仓库脚本实际检查 16 个 Markdown、321 个内部链接、211 个页码引用、38 个表格、28 个独立数学块和 7 个 Mermaid，零错误、零警告；完整输出随交付包提供。原有 `verification.md` 是历史记录，没有把它的旧计数改写为本次结果。
+新增本报告后，最终仓库脚本实际检查 16 个 Markdown、321 个内部链接、211 个页码引用、39 个表格、28 个独立数学块和 7 个 Mermaid，零错误、零警告；完整输出随交付包提供。原有 `verification.md` 是历史记录，没有把它的旧计数改写为本次结果。
 
 ## 修改文件与交付
 
@@ -174,16 +195,8 @@ Liu、Shen、Cai 的原始 PDF 不在公开仓库，官方页面本次未提供�
 
 每张 GitHub 截图保留文件路径的页面上下文；`*-before-desktop.jpg` 为基线页面错误证据，不能作为修复后验证截图。本地复查图明确标为本地渲染。结构化记录提供文件路径、公式原行号、实际渲染错误和逐项公式清单，便于定位。
 
-远端操作状态：GitHub 分支创建请求被拒；Git 推送仅执行无写入的 `--dry-run`，返回 `could not read Username ... terminal prompts disabled`；没有实际推送、PR、合并或强制推送。已有三个提交及其父链保留。
+远端操作状态：初次连接器写入被拒，后由用户通过 GitHub Desktop 普通推送专用分支，远端提交 `85d2617bf20afaad5457431dbed0fa99b667b5cd`。当前主分支仍为 `c707a84ce8aa52b78b8e57b36eb91aeba4fc1657`，原有三个提交及其父链保留，没有强制推送或合并。PR 尚未创建。
 
-可在干净的基线工作区应用补丁：
+本次补充交付基于 `85d2617`，只包含更新后的 Cai `notes.md` 和本报告，附实际网页截图、结构化记录及一行补充公式的等价验证结果。使用 GitHub Desktop 在现有修复分支中替换这两个文件，运行 `python tools/verify_repository.py` 和 `git diff --check`，提交后使用 Push origin。初次修复包仍保留为历史交付，本次包是其补充。
 
-```bash
-git switch -c fix/markdown-display-quality-20261011 c707a84ce8aa52b78b8e57b36eb91aeba4fc1657
-git am ../paper-laser-display-fix.patch
-python tools/verify_repository.py
-```
-
-上例假设补丁位于仓库目录的上一级；具体提交 SHA、补丁应用实测结果和文件校验值见交付说明。具有 GitHub 写入认证后，可普通推送该分支，再创建针对 `main` 的 PR；这些远端操作本次尚未执行。
-
-验收尚缺：修复后的 GitHub 全部修改页面及逐式复查、窄屏阅读、PDF 网页预览／跳转，以及三篇未取得全文的原文公式核对。上述项目保持未验证或待核实，不默认通过。
+验收尚缺：补充修复的 Cai 连乘式、其他四篇笔记及更新报告的 GitHub 阅读页复查、窄屏阅读、PDF 网页预览／跳转，以及三篇未取得全文的原文公式核对。上述项目保持未验证或待核实，不默认通过。

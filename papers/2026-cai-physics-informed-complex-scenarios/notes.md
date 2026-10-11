@@ -60,7 +60,7 @@ $\sigma$ 为光学密度， $I$ 为反射／辐射项， $\Delta$ 为 bin 宽；
 用 SDF $\phi$ 的零等值面表达表面，转为表面密度与 opacity $\alpha^s=1-e^{-\sigma^s}$；沿深度透过率为
 
 ```math
-T^s_{ijk}=\prod_{l<k}(1-\alpha^s_{ijl}).
+T^s_{ijk}=\prod_{l\lt k}(1-\alpha^s_{ijl}).
 ```
 
 将表面贡献卷积回 $G$ 后与光子观测比较；沿视线多层输出保留体素，不强制压成一个深度。[PDF pp.5–7, Eqs.12–20](source.md#pdf-page-5)
