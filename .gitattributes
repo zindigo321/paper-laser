@@ -1,0 +1,2 @@
+# Preserve uploaded PDF bytes and treat PDF changes as binary.
+*.pdf binary
