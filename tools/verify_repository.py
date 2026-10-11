@@ -80,18 +80,27 @@ def main():
         text = document.read_text(encoding='utf-8')
         rel = str(document.relative_to(root))
         fence_open = False
+        fence_math = False
         math_open = False
         table_width = None
         math_parts = []
         current_math = []
         for line_num, line in enumerate(text.splitlines(),1):
             if line.lstrip().startswith('```'):
+                if fence_open and fence_math:
+                    math_parts.append('\n'.join(current_math))
+                    current_math = []
+                fence_math = not fence_open and line.strip() == '```math'
                 fence_open = not fence_open
+                if fence_math:
+                    math_count += 1
                 if fence_open and line.strip() == '```mermaid':
                     diagram_count += 1
                 table_width = None
                 continue
             if fence_open:
+                if fence_math:
+                    current_math.append(line)
                 continue
             if line.strip() == '$$':
                 if math_open:

@@ -39,13 +39,13 @@ flowchart TD
 
 **时间分类与连续估计。** 为便于阅读统一下标；与原文等价的整理表达为
 
-$$
+```math
 p_{ij}(k)=\frac{\exp z_{ij}(k)}{\sum_{m=1}^{K}\exp z_{ij}(m)},\qquad
 \hat\tau_{ij}=\sum_{k=1}^{K}k\,p_{ij}(k),\qquad
 \hat d_{ij}=\frac{c\Delta}{2}\hat\tau_{ij}.
-$$
+```
 
-$z_{ij}(k)$ 为像素 $(i,j)$ 第 $k$ 个时间 bin 的 logit，$K$ 为 bin 数，$\Delta$ 为时间 bin 宽度，$c$ 为光速。式中未写系统固定时间偏置；实际测量需依标定换算绝对距离。[PDF pp.5–6,11–12](paper.pdf#page=5)
+$z_{ij}(k)$ 为像素 $(i,j)$ 第 $k$ 个时间 bin 的 logit， $K$ 为 bin 数， $\Delta$ 为时间 bin 宽度， $c$ 为光速。式中未写系统固定时间偏置；实际测量需依标定换算绝对距离。[PDF pp.5–6,11–12](paper.pdf#page=5)
 
 **训练目标。** 原文使用 CE 与 NLTV 的加权组合：
 
@@ -54,12 +54,12 @@ $$
 \mathcal L_{\rm CE}=-\sum_{i,j,k}y_{ijk}\log p_{ij}(k),
 $$
 
-$$
+```math
 \mathcal L_{\rm NLTV}=\frac1Z\sum_p\sum_{q\in W_p}w_{pq}|\hat d_p-\hat d_q|,
-\qquad w_{pq}=\exp\!\left[-\frac{\operatorname{MSE}(P_p,P_q)}{h^2}\right].
-$$
+\qquad w_{pq}=\exp\!\left[-\frac{\mathrm{MSE}(P_p,P_q)}{h^2}\right].
+```
 
-$y$ 为深度对应时间 bin 的 one-hot 标签，$P_p,P_q$ 为局部 patch，$W_p$ 为邻域，$h$ 控制相似性权重，$Z$ 为归一化项。实现配置为 patch 3、搜索窗口 5、noise weight 0.2；符号重排属整理表达，原式见正文。[PDF pp.11–12](paper.pdf#page=11)
+$y$ 为深度对应时间 bin 的 one-hot 标签， $P_p,P_q$ 为局部 patch， $W_p$ 为邻域， $h$ 控制相似性权重， $Z$ 为归一化项。实现配置为 patch 3、搜索窗口 5、noise weight 0.2；符号重排属整理表达，原式见正文。[PDF pp.11–12](paper.pdf#page=11)
 
 光子建模要求激光重复周期 $T_r\ge 2R_{\max}/c$；正文以每脉冲触发概率低于 5% 为忽略 pile-up 的前提。因此强计数／饱和条件不能直接沿用该模型。[PDF p.5](paper.pdf#page=5)
 

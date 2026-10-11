@@ -32,11 +32,11 @@ flowchart TD
 
 **光子模型与 SNR。** 原文以信号和背景光子均值定义
 
-$$
+```math
 \mathrm{SNR}=10\log_{10}\!\left(\frac{N_s}{N_n}\right).
-$$
+```
 
-$N_s$、$N_n$ 为所用统计条件下的平均信号、背景计数；不能将这个 dB 数值直接和其他论文的无量纲 SBR 对比。Geiger 触发概率还考虑 speckle／强度波动参数 $M'$。[PDF pp.2–3, Eqs.2–7](paper.pdf#page=2)
+$N_s$、 $N_n$ 为所用统计条件下的平均信号、背景计数；不能将这个 dB 数值直接和其他论文的无量纲 SBR 对比。Geiger 触发概率还考虑 speckle／强度波动参数 $M'$。[PDF pp.2–3, Eqs.2–7](paper.pdf#page=2)
 
 **候选区域。** 在 $W_s\times W_s$ 窗口统计 ToF 直方图，以峰宽和峭度选择窗口，再以峰内光子比例阈值 $\gamma$ 标记目标像素。正文示例最大峰宽为 100 bins（约 15 m 的深度范围）。[PDF pp.4–5](paper.pdf#page=4)
 
@@ -46,7 +46,7 @@ $$
 t_i=ai+b+\epsilon_i,\qquad \epsilon_i\sim\mathcal N(0,\sigma^2).
 $$
 
-$i$ 为事件所属脉冲／子帧序号，$t_i$ 是 ToF；$a$、$b$ 为拟合斜率和截距。两次 RANSAC 去除离群点并细化拟合，斜率受物理速度约束，截距与残差受激光脉宽、计时抖动约束。DBSCAN 在时间–帧域识别主簇及有效起止帧，不是另设固定子帧阈值。[PDF pp.5–6](paper.pdf#page=5)
+$i$ 为事件所属脉冲／子帧序号， $t_i$ 是 ToF； $a$、 $b$ 为拟合斜率和截距。两次 RANSAC 去除离群点并细化拟合，斜率受物理速度约束，截距与残差受激光脉宽、计时抖动约束。DBSCAN 在时间–帧域识别主簇及有效起止帧，不是另设固定子帧阈值。[PDF pp.5–6](paper.pdf#page=5)
 
 **速度、终点距离和尺寸。** 统一符号后的整理表达：
 
@@ -63,15 +63,15 @@ $$
 W=v_c t_1,\quad L=v_r t_2.
 $$
 
-$\theta$ 为总 FoV 角宽，$M$ 为单边阵列像素数，$R$ 为距离；$m,n$ 为跨越像素数；$\Delta t_r,\Delta t_c$ 为对应驻留时长；$T_{\rm frame}$ 为模型中事件帧周期；$F_{\rm res}$ 为重建终帧；$t_0$ 为系统延时；$t_1,t_2$ 为邻像素同时出现回波的时长。使用斜率时必须核对帧索引实际对应的脉冲周期，不能误用 5 Hz 重建周期。[PDF pp.6–7, Eqs.17–25](paper.pdf#page=6)
+$\theta$ 为总 FoV 角宽， $M$ 为单边阵列像素数， $R$ 为距离； $m,n$ 为跨越像素数； $\Delta t_r,\Delta t_c$ 为对应驻留时长； $T_{\rm frame}$ 为模型中事件帧周期； $F_{\rm res}$ 为重建终帧； $t_0$ 为系统延时； $t_1,t_2$ 为邻像素同时出现回波的时长。使用斜率时必须核对帧索引实际对应的脉冲周期，不能误用 5 Hz 重建周期。[PDF pp.6–7, Eqs.17–25](paper.pdf#page=6)
 
-终像素内位移 $\delta x=v_c\Delta t^*$、$\delta y=v_r\Delta t^*$ 与估计尺寸共同确定栅格化，示意中每像素细分 $10\times10$。这属于输出坐标表达；最终定位精度仍受光子、标定和运动估计限制。[PDF p.7](paper.pdf#page=7)
+终像素内位移 $`\delta x=v_c\Delta t^*`$、 $`\delta y=v_r\Delta t^*`$ 与估计尺寸共同确定栅格化，示意中每像素细分 $10\times10$。这属于输出坐标表达；最终定位精度仍受光子、标定和运动估计限制。[PDF p.7](paper.pdf#page=7)
 
 ## 关键参数与实验条件
 
 | 参数 | Monte Carlo 仿真 | 真实 UAV 外场 | PDF 证据 |
 |---|---|---|---|
-| 探测器／阵列 | Gm-APD 模型，$64\times64$ | $64\times64$ Gm-APD | [pp.8,14](paper.pdf#page=8) |
+| 探测器／阵列 | Gm-APD 模型， $64\times64$ | $64\times64$ Gm-APD | [pp.8,14](paper.pdf#page=8) |
 | 波长／重复率 | 1064 nm／2.5 kHz | 1064 nm／2.5 kHz | [pp.8,14](paper.pdf#page=8) |
 | 脉宽／功率／口径 | 脉宽等具体值未见 Table 3 | 10 ns／6.8 W（2.72 mJ/pulse）／800 mm | [p.14](paper.pdf#page=14) |
 | FoV／距离 | $1^\circ\times1^\circ$／约 1 km | 同 FoV／1.8 km 斜距，约 45 m 高度 | [pp.8,14](paper.pdf#page=8) |
@@ -101,7 +101,7 @@ $\theta$ 为总 FoV 角宽，$M$ 为单边阵列像素数，$R$ 为距离；$m,n
 
 **需核实的原文细节：**
 
-- p.8 在 1 km 给约 0.55 m/pixel，但 p.11–12 给 0.273 m/pixel；$1^\circ/64$ 的几何换算支持后者。不要将两者混用推导速度上限。[PDF pp.8,11–12](paper.pdf#page=8)
+- p.8 在 1 km 给约 0.55 m/pixel，但 p.11–12 给 0.273 m/pixel； $1^\circ/64$ 的几何换算支持后者。不要将两者混用推导速度上限。[PDF pp.8,11–12](paper.pdf#page=8)
 - Eq.27 的速度数值写为 “3.362 s”，量纲不正确；Table 7 的部分起止帧和 Frame Span 算术不符，例如 283–470 对应 188 帧而表写 168。精确驻留时间及尺寸复算需作者核对。[PDF pp.11,15](paper.pdf#page=11)
 - 文中 longitudinal 同时用于 ToF 距离运动和 FoV 平面方向描述；此处保留原词，避免把 p.15 的 4.62 m/s 自动解释成径向速度。
 
